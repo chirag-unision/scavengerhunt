@@ -28,21 +28,39 @@ export default function scvn_main() {
                     </View>
             })}
         </View>
+
         <Image 
-        source={{uri: 'https://pngimg.com/d/ladder_PNG103280.png'}} 
-        style={[styles.ladder, {transform: [{ rotate: '45deg'}], marginLeft: 190, marginTop: 150}]}
+        source={require('../src/snake.png')} 
+        style={[styles.ladder1, {transform: [{ rotate: '50deg'}], marginLeft: 90, marginTop: 140}]}
         />
         <Image 
-        source={{uri: 'https://pngimg.com/d/ladder_PNG103280.png'}} 
-        style={[styles.ladder, {transform: [{ rotate: '-65deg'}], marginLeft: 190, marginTop: -40}]}
+        source={require('../src/snake.png')} 
+        style={[styles.ladder1, {transform: [{ rotate: '-45deg'}], marginLeft: 250, marginTop: 50}]}
         />
         <Image 
-        source={{uri: 'https://pngimg.com/d/ladder_PNG103280.png'}} 
-        style={[styles.ladder, {transform: [{ rotate: '65deg'}], marginLeft: 100, marginTop: 50}]}
+        source={require('../src/snake2.png')} 
+        style={[styles.snake2, {transform: [{ rotate: '-45deg'}], marginLeft: 40, marginTop: 50}]}
         />
         <Image 
-        source={{uri: 'https://pngimg.com/d/ladder_PNG103280.png'}} 
-        style={[styles.ladder, {transform: [{ rotate: '-50deg'}], marginLeft: 190, marginTop: 140}]}
+        source={require('../src/snake2.png')} 
+        style={[styles.snake2, {transform: [{ rotate: '-85deg'}], marginLeft: 150, marginTop: 240}]}
+        />
+
+        <Image 
+        source={require('../src/ladder3.png')} 
+        style={[styles.ladder3, {transform: [{ rotate: '45deg'}], marginLeft: 50, marginTop: 65}]}
+        />
+        <Image 
+        source={require('../src/ladder2.png')} 
+        style={[styles.ladder2, {transform: [{ rotate: '-25deg'}], marginLeft: 250, marginTop: 40}]}
+        />
+        <Image 
+        source={require('../src/ladder1.png')} 
+        style={[styles.ladder1, {transform: [{ rotate: '15deg'}], marginLeft: 115, marginTop: 80}]}
+        />
+        <Image 
+        source={require('../src/ladder3.png')} 
+        style={[styles.ladder3, {transform: [{ rotate: '-50deg'}], marginLeft: 220, marginTop: 230}]}
         />
     </View>
   )
@@ -71,13 +89,28 @@ const styles = StyleSheet.create({
     gridCol: {
         minHeight: 30,
         minWidth: 30,
-        borderWidth: 2,
-        borderColor: 'orange',
-        margin: 2
+        borderWidth: 1,
+        borderColor: 'blue',
+        margin: 1
     },
-    ladder: {
+    ladder1: {
         width: 50,
         height: 200,
+        position: 'absolute'
+    },
+    ladder2: {
+        width: 50,
+        height: 150,
+        position: 'absolute'
+    },
+    ladder3: {
+        width: 50,
+        height: 100,
+        position: 'absolute'
+    },
+    snake2: {
+        width: 80,
+        height: 100,
         position: 'absolute'
     }
 })
