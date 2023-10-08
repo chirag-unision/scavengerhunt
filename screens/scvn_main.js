@@ -1,7 +1,9 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Button } from '@react-native-material/core';
 
-export default function scvn_main() {
+export default function Scvn_main({navigation}) {
   let i= 0;
   let j= 0;
 
@@ -18,10 +20,26 @@ export default function scvn_main() {
     [1,2,3,4,5,6,7,8,9,10],
   ];
 
+  const [loading, setLoading]= useState(false);
   const [myState, setMyState]= useState(0);
+  const [teamname, setTeamName]= useState('');
+
+  useEffect( async () => {
+    let value= await AsyncStorage.getItem('teamname');
+    setTeamName(value);
+    console.log(value)
+  }, [])
+  
 
   return (
     <View style={styles.wrapper}>
+        <View style={styles.topContainer}>
+            <Text style={styles.heading}>Mystery Maze</Text>
+            <View style={styles.scorecard}>
+                <Text>Team: {teamname}</Text>
+                <Text>Score: {`{score}`}</Text>
+            </View>
+        </View>
         <View style={styles.board}>
             <View style={styles.container}>
             {grid.map((item)=> { i++, j++
@@ -36,38 +54,53 @@ export default function scvn_main() {
             </View>
         </View>
 
+        <View>
+            <Button
+            title="Start Playing"
+            loading={loading}
+            loadingIndicatorPosition="overlay"
+            onPress={()=>{}}
+            />
+            <Button
+            title="Get Riddle"
+            loading={loading}
+            loadingIndicatorPosition="overlay"
+            onPress={()=>{navigation.navigate('riddlelist')}}
+            />
+        </View>
+
         <Image 
         source={require('../src/snake.png')} 
-        style={[styles.ladder1, {transform: [{ rotate: '50deg'}], marginLeft: 90, marginTop: 140}]}
+        style={[styles.ladder1, {transform: [{ rotate: '50deg'}], marginLeft: 90, marginTop: 340}]}
         />
         <Image 
         source={require('../src/snake.png')} 
-        style={[styles.ladder1, {transform: [{ rotate: '-45deg'}], marginLeft: 250, marginTop: 50}]}
+        style={[styles.ladder1, {transform: [{ rotate: '-45deg'}], marginLeft: 250, marginTop: 250}]}
         />
         <Image 
         source={require('../src/snake2.png')} 
-        style={[styles.snake2, {transform: [{ rotate: '-45deg'}], marginLeft: 40, marginTop: 50}]}
+        style={[styles.snake2, {transform: [{ rotate: '-45deg'}], marginLeft: 40, marginTop: 250}]}
         />
         <Image 
         source={require('../src/snake2.png')} 
-        style={[styles.snake2, {transform: [{ rotate: '-85deg'}], marginLeft: 150, marginTop: 240}]}
+        style={[styles.snake2, {transform: [{ rotate: '-85deg'}], marginLeft: 150, marginTop: 440}]}
         />
 
         <Image 
         source={require('../src/ladder3.png')} 
-        style={[styles.ladder3, {transform: [{ rotate: '45deg'}], marginLeft: 50, marginTop: 65}]}
+        style={[styles.ladder3, {transform: [{ rotate: '45deg'}], marginLeft: 50, marginTop: 265}]}
         />
         <Image 
         source={require('../src/ladder2.png')} 
-        style={[styles.ladder2, {transform: [{ rotate: '-25deg'}], marginLeft: 250, marginTop: 40}]}
+        style={[styles.ladder2, {transform: [{ rotate: '-25deg'}], marginLeft: 250, marginTop: 240}]}
         />
         <Image 
         source={require('../src/ladder1.png')} 
-        style={[styles.ladder1, {transform: [{ rotate: '15deg'}], marginLeft: 115, marginTop: 80}]}
+        style={[styles.ladder1, {transform: [{ rotate: '15deg'}], marginLeft: 115, marginTop: 280}]}
         />
         <Image 
         source={require('../src/ladder3.png')} 
-        style={[styles.ladder3, {transform: [{ rotate: '-50deg'}], marginLeft: 220, marginTop: 230}]}
+        style={[styles.ladder3, {transform: [{ rotate: '-50deg'}], marginLeft: 220, marginTop: 430}]}
         />
     </View>
   )
@@ -86,8 +119,22 @@ const styles = StyleSheet.create({
         margin: 10,
         padding: 10
     },
+    topContainer: {
+        height: 200,
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    scorecard: {
+        width: '90%',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    heading: {
+        fontSize: 60,
+        fontFamily: 'cursive',
+    },
     container: {
-        borderWidth: 1
+        borderWidth: 1,
     },
     numbers: {
         color: 'white',
