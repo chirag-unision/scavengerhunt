@@ -1,8 +1,9 @@
 const Sequelize= require('sequelize');
 
-const sequelize= new Sequelize('uccda', 'root', '', {
-    host: 'localhost',
-    dialect: 'mysql'
+const sequelize= new Sequelize('u977092243_chirag', 'u977092243_chirag', 'Chirag@1226', {
+    host: 'srv873.hstgr.io',
+    dialect: 'mysql',
+    port: 3306
 });
 
 sequelize.authenticate().then(()=> {
