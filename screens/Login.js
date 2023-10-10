@@ -37,11 +37,11 @@ export default function Login({navigation}) {
         mobile: mobile, pass: pswd
       })
       .then(function (response) {
-        console.log(response.data.teamid)
         storeData('key', response.data.token)
         storeData('mobile', mobile)
         storeData('teamid', response.data.teamid)
         storeData('teamname', response.data.teamname)
+        storeData('teamscore', response.data.teamscore.toString())
         getData();
       })
       .catch(function (error) {

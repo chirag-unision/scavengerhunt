@@ -1,19 +1,28 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native'
-import { Pressable } from "@react-native-material/core";
+import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, TextInput } from "@react-native-material/core";
 import React, {useState} from 'react'
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import axios from 'axios'
 import {baseURL} from '../app.json'
 
-export default function RiddlePage({route}) {
+export default function RiddlePage({route, navigation}) {
   const [ans, setAns]= useState();
-  const { description } = route.params;
-
+  const { description, id, pointData1, pointData2, lastScore, teamid } = route.params;
+  const jump= pointData1!=pointData2?true:false;
+  
   const handleSubmission= ()=> {
-    if(ans!=null || ans!="") {
-      axios.get(baseURL+'riddlelist?teamid='+teamid)
+
+    if(ans!=null && ans!="") {
+      axios.post(baseURL+'checkriddle', {
+        ans: ans,
+        riddleid: id,
+        score: pointData2,
+        teamid: teamid
+      })
       .then(function (response) {
-        setData(response.data.data);
+        console.log(response.data);
+        if(response.data.status==100)
+        navigation.replace('checkpoint', {points: pointData1, jump: jump, jumpAt: pointData2, lastScore: lastScore})
       })
       .catch(function (error) {
         console.log(error);
@@ -28,7 +37,7 @@ export default function RiddlePage({route}) {
         <Text style={styles.text}>{description}</Text>
       </View>
       <View>
-        <TextInput placeholder='Enter the Code' />
+        <TextInput placeholder='Enter the Code' onChangeText={setAns} />
         <Pressable onPress={handleSubmission} style={styles.button}>
           <Text>Submit</Text>
         </Pressable>

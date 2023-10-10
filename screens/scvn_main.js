@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Button } from '@react-native-material/core';
 
-export default function Scvn_main({navigation}) {
+export default function Scvn_main({route, navigation}) {
   let i= 0;
   let j= 0;
 
@@ -20,16 +20,44 @@ export default function Scvn_main({navigation}) {
     [1,2,3,4,5,6,7,8,9,10],
   ];
 
+  const {jump, jumpAt}= route.params;
+
   const [loading, setLoading]= useState(false);
   const [myState, setMyState]= useState(0);
   const [teamname, setTeamName]= useState('');
+  const [teamscore, setTeamScore]= useState('');
 
-  useEffect( async () => {
-    let value= await AsyncStorage.getItem('teamname');
-    setTeamName(value);
-    console.log(value)
+  const storeData = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value);
+    } catch (e) {
+      // saving error
+    }
+  };
+
+  useEffect(()=> {
+    action();
   }, [])
   
+  const action= async () => {
+    let value= await AsyncStorage.getItem('teamname');
+    setTeamName(value);
+    value= await AsyncStorage.getItem('teamscore');
+    if(jump) {
+        setTeamScore(jumpAt);
+        setMyState(jumpAt);
+        storeData('teamscore', jumpAt.toString());
+    } else {
+        setTeamScore(value);
+        setMyState(value);
+    }
+    if(value=='100') {
+    setTimeout(() => {
+        navigation.replace('finishgame');
+        console.log(value+" sdds");
+    }, 3000);
+}
+  }
 
   return (
     <View style={styles.wrapper}>
@@ -37,7 +65,7 @@ export default function Scvn_main({navigation}) {
             <Text style={styles.heading}>Mystery Maze</Text>
             <View style={styles.scorecard}>
                 <Text>Team: {teamname}</Text>
-                <Text>Score: {`{score}`}</Text>
+                <Text>Score: {teamscore}</Text>
             </View>
         </View>
         <View style={styles.board}>
@@ -45,8 +73,9 @@ export default function Scvn_main({navigation}) {
             {grid.map((item)=> { i++, j++
             return  <View style={styles.gridRow}>
                         {(i%2==1?item.reverse():item).map((text)=> { j++
-                        return  <View style={[styles.gridCol, myState==text?styles.gridColBg3:(j%2==0?styles.gridColBg1:styles.gridColBg2)]}>
+                        return  <View key={text} style={[styles.gridCol, (j%2==0?styles.gridColBg1:styles.gridColBg2)]}>
                                     <Text style={styles.numbers}>{text}</Text>
+                                    {myState==text && <Image style={styles.userImg} source={require('../src/user.png')} />}
                                 </View> 
                         })}
                     </View>
@@ -55,27 +84,33 @@ export default function Scvn_main({navigation}) {
         </View>
 
         <View>
-            <Button
+            {/* <Button
             title="Start Playing"
             loading={loading}
             loadingIndicatorPosition="overlay"
             onPress={()=>{}}
-            />
+            /> */}
             <Button
             title="Get Riddle"
             loading={loading}
             loadingIndicatorPosition="overlay"
-            onPress={()=>{navigation.navigate('riddlelist')}}
+            onPress={()=>{navigation.replace('riddlelist')}}
+            />
+            <Button
+            title="Logout"
+            loading={loading}
+            loadingIndicatorPosition="overlay"
+            onPress={()=>{AsyncStorage.clear(); navigation.navigate('loginstack')}}
             />
         </View>
 
         <Image 
         source={require('../src/snake.png')} 
-        style={[styles.ladder1, {transform: [{ rotate: '50deg'}], marginLeft: 90, marginTop: 340}]}
+        style={[styles.snake11, {transform: [{ rotate: '50deg'}], marginLeft: 90, marginTop: 340}]}
         />
         <Image 
         source={require('../src/snake.png')} 
-        style={[styles.ladder1, {transform: [{ rotate: '-45deg'}], marginLeft: 250, marginTop: 250}]}
+        style={[styles.snake1, {transform: [{ rotate: '-45deg'}], marginLeft: 250, marginTop: 250}]}
         />
         <Image 
         source={require('../src/snake2.png')} 
@@ -96,7 +131,7 @@ export default function Scvn_main({navigation}) {
         />
         <Image 
         source={require('../src/ladder1.png')} 
-        style={[styles.ladder1, {transform: [{ rotate: '15deg'}], marginLeft: 115, marginTop: 280}]}
+        style={[styles.ladder1, {transform: [{ rotate: '15deg'}], marginLeft: 100, marginTop: 340}]}
         />
         <Image 
         source={require('../src/ladder3.png')} 
@@ -125,7 +160,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     scorecard: {
-        width: '90%',
+        width: '70%',
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
@@ -160,11 +195,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#4F3A13',
     },
     gridColBg3: {
-        backgroundColor: '#fff',
+        backgroundColor: '#6200ED',
     },
     ladder1: {
         width: 50,
-        height: 200,
+        height: 150,
         position: 'absolute'
     },
     ladder2: {
@@ -177,9 +212,21 @@ const styles = StyleSheet.create({
         height: 100,
         position: 'absolute'
     },
+    snake1: {
+        width: 50,
+        height: 200,
+        position: 'absolute'
+    },
     snake2: {
         width: 80,
         height: 100,
         position: 'absolute'
+    },
+    userImg: {
+        position: 'absolute',
+        width: 25,
+        height: 28,
+        left: 2,
+        zIndex: 20
     }
 })

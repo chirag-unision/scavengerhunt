@@ -15,7 +15,13 @@ router.post('/', (req, res) => {
   .then((user) => {
     if(user!==null) {      
       const token = jwt.sign({ mobile: mobile }, secretKey, { expiresIn: '12h' });
-      res.send({status: 100, token: token, teamid: user.dataValues.teamid, teamname: user.dataValues.teamname, msg: 'Hello, You are calling the login api. Your mobile no. is '+mobile});
+      res.send({
+        status: 100, 
+        token: token, 
+        teamid: user.dataValues.teamid, 
+        teamname: user.dataValues.teamname, 
+        teamscore: user.dataValues.teamscore, 
+        msg: 'Hello, You are calling the login api. Your mobile no. is '+mobile});
     } else {
       res.send({status: 101});
     }

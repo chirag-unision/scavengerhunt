@@ -6,7 +6,7 @@ module.exports= (sequelize, DataTypes)=> {
         email: DataTypes.STRING,
         mobile: DataTypes.BIGINT,
         password: DataTypes.STRING,
-        teamscore: DataTypes.BIGINT,
+        teamscore: DataTypes.STRING,
         riddlesnotvisited: DataTypes.STRING,
         finishtime: DataTypes.DATE
     });
