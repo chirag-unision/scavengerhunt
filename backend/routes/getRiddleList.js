@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
   const teams= db.teams;
   const riddles= db.riddles;
 
-  const snakeArr= [37,56,75,99];
+  const snakeArr= [37,56,75,98];
   const snakeReach= [14,20,50,63];
 
   const ladderArr= [13,23,52,61];
@@ -48,8 +48,10 @@ router.get('/', (req, res) => {
   }
   while(array.length<3) {
     random_no= Math.floor(Math.random()*(upperLim-lowerLim+1))+parseInt(lowerLim);
-    array.push(random_no);
-    array2.push(random_no);
+    if(!array.includes(random_no)) {
+      array.push(random_no);
+      array2.push(random_no);
+    }
   }
 
   teams.findOne({

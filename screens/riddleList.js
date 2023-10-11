@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { Pressable } from '@react-native-material/core'
 import AsyncStorage from "@react-native-async-storage/async-storage"
@@ -54,17 +54,19 @@ export default function RiddleList({navigation}) {
 
   return (
     <View style={styles.wrapper}>
-      <Text>Choose a Riddle to proceed</Text>
+      <Image style={{width: '100%', height: '100%', position: 'absolute', opacity: 0.2}} source={require('../src/wall-conf.jpg')} />
+      <Text style={styles.headline}>Choose a Riddle to proceed</Text>
       <View style={styles.container}>
+                {!data.length && <Text style={[styles.text, {textAlign: 'center', paddingVertical: 20, fontSize: 20, fontWeight: '500'}]}>Loading....</Text>}
                 {data.length==3 && <>
                   <Pressable key={data[0].id} onPress={()=>{navigation.replace('riddlepage', {id: data[mixArr[0]].id, description: data[mixArr[0]].description, pointData1: array1[0], pointData2: array2[0], lastScore: parseInt(score), teamid: tmid})}} style={styles.riddleCard}>
-                    <Text style={styles.text}>{`Riddle-A`}</Text>
+                    <Text style={styles.text}>{`Riddle A`}</Text>
                   </Pressable>
                   <Pressable key={data[1].id} onPress={()=>{navigation.replace('riddlepage', {id: data[mixArr[1]].id, description: data[mixArr[1]].description, pointData1: array1[1], pointData2: array2[1], lastScore: parseInt(score), teamid: tmid})}} style={styles.riddleCard}>
-                    <Text style={styles.text}>{`Riddle-B`}</Text>
+                    <Text style={styles.text}>{`Riddle B`}</Text>
                   </Pressable>
                   <Pressable key={data[2].id} onPress={()=>{navigation.replace('riddlepage', {id: data[mixArr[2]].id, description: data[mixArr[2]].description, pointData1: array1[2], pointData2: array2[2], lastScore: parseInt(score), teamid: tmid})}} style={styles.riddleCard}>
-                    <Text style={styles.text}>{`Riddle-C`}</Text>
+                    <Text style={styles.text}>{`Riddle C`}</Text>
                   </Pressable>
                   </>}
       </View>
@@ -89,7 +91,15 @@ const styles = StyleSheet.create({
         borderColor: '#fff',
         backgroundColor: '#fff'
     },
+    headline: {
+      padding: 20,
+      color: '#000',
+      fontSize: 18,
+      fontWeight: '500'
+    },
     text: {
-        color: '#000'
+      color: '#000',
+      fontSize: 16,
+      fontWeight: '500'
     }
 })

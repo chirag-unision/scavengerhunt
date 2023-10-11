@@ -7,6 +7,7 @@ const LoginRoute= require('./routes/login')
 const GetRiddleListRoute= require('./routes/getRiddleList')
 const GetRiddleRoute= require('./routes/login')
 const CheckRiddleRoute= require('./routes/checkRiddle')
+const HandleFreeze= require('./routes/handleBoard')
 
 const {Sequelize, DataTypes} = require('sequelize')
 const sequelize = require('./sequelize');
@@ -39,6 +40,7 @@ app.get('/', (req, res)=>{
     //   console.error('Error creating student:', error);
     // });
 
+    
     // db.riddles.bulkCreate(
     //   [
     //     {
@@ -288,6 +290,7 @@ app.use('/login', middleDB, LoginRoute);
 app.use('/riddlelist', middleDB, GetRiddleListRoute);
 app.use('/riddle', middleDB, GetRiddleRoute);
 app.use('/checkriddle', middleDB, CheckRiddleRoute);
+app.use('/handlefreeze', middleDB, HandleFreeze);
 
 app.use((req, res) => {
     res.status(404).send('Not found!');

@@ -1,17 +1,20 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { Pressable, TextInput } from "@react-native-material/core";
-import React, {useState} from 'react'
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import React, {useEffect, useState} from 'react'
 import axios from 'axios'
 import {baseURL} from '../app.json'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function RiddlePage({route, navigation}) {
   const [ans, setAns]= useState();
+  const [error, setError]= useState(false);
+  const [wrongCount, setWrongCount]= useState(0);
+
   const { description, id, pointData1, pointData2, lastScore, teamid } = route.params;
   const jump= pointData1!=pointData2?true:false;
-  
-  const handleSubmission= ()=> {
 
+  const handleSubmission= ()=> {
+    if(wrongCount<3) {
     if(ans!=null && ans!="") {
       axios.post(baseURL+'checkriddle', {
         ans: ans,
@@ -21,12 +24,35 @@ export default function RiddlePage({route, navigation}) {
       })
       .then(function (response) {
         console.log(response.data);
-        if(response.data.status==100)
-        navigation.replace('checkpoint', {points: pointData1, jump: jump, jumpAt: pointData2, lastScore: lastScore})
+        if(response.data.status==100) {
+          navigation.replace('checkpoint', {points: pointData1, jump: jump, jumpAt: pointData2, lastScore: lastScore})
+        }
+        else {
+          setError(true);
+          setWrongCount(wrongCount+1);
+          if(wrongCount==2) {
+            let d= new Date();
+            let curr= BigInt(d.getTime())+BigInt(600000);
+            axios.post(baseURL+'handleFreeze', {
+              teamid: teamid,
+              freezeTime: curr.toString()
+            })
+            .then(function (response) {
+              if(response.data.status==100) {
+                AsyncStorage.clear();
+                navigation.replace('loginstack');
+              }
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          }
+        }
       })
       .catch(function (error) {
         console.log(error);
       });
+    }
     }
 
   }
@@ -37,8 +63,9 @@ export default function RiddlePage({route, navigation}) {
         <Text style={styles.text}>{description}</Text>
       </View>
       <View>
-        <TextInput placeholder='Enter the Code' onChangeText={setAns} />
-        <Pressable onPress={handleSubmission} style={styles.button}>
+        <TextInput placeholder='Enter the Code' onChangeText={setAns} onChange={()=>setError(false)} />
+        {error && <Text style={styles.error}>{`Incorrect Answer! ${3-wrongCount} more wrong attempts and game will be freezed for minutes.`}</Text>}
+        <Pressable onPress={handleSubmission} style={styles.button} >
           <Text>Submit</Text>
         </Pressable>
       </View>
@@ -74,4 +101,8 @@ const styles = StyleSheet.create({
       borderColor: '#fff',
       backgroundColor: '#EEAE3A'
     },
+    error: {
+      color: 'red',
+      paddingHorizontal: 20
+    }
 })

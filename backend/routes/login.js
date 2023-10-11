@@ -21,6 +21,7 @@ router.post('/', (req, res) => {
         teamid: user.dataValues.teamid, 
         teamname: user.dataValues.teamname, 
         teamscore: user.dataValues.teamscore, 
+        freezeTime: user.dataValues.freezeTime, 
         msg: 'Hello, You are calling the login api. Your mobile no. is '+mobile});
     } else {
       res.send({status: 101});

@@ -3,9 +3,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import MainStack from './stacks/MainStack';
 import LoginStack from './stacks/LoginStack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SplashScreen from './screens/SplashScreen';
 
 export default function App() {
   const [isLogin, setIsLogin]= useState(false);
+  const [isLoaded, setIsLoaded]= useState(false);
 
   useEffect(()=> {
     getData();
@@ -21,12 +23,13 @@ export default function App() {
     } catch (e) {
       // error reading value
     }
+    setIsLoaded(true);
   };
   
 
   return (
     <NavigationContainer>
-        {isLogin ? <MainStack/> : <LoginStack/>}
+      {isLoaded ? (isLogin ? <MainStack/> : <LoginStack/>) : <SplashScreen/>}
     </NavigationContainer>
   )
 }
