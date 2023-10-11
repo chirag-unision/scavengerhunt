@@ -33,6 +33,8 @@ export default function Login({navigation}) {
   };
   
 const handleLogin= ()=> {
+  setError(true);
+  setErrText('Your account has freezed for 10 minutes due to many wrong attempts.')
   const d = new Date();
   if(parseInt(d.getHours())>=11) {
     let regex= /^[6-9][0-9]{9}$/;
