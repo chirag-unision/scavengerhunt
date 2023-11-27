@@ -1,6 +1,7 @@
 const express= require('express')
 const app= express()
 const port= 3200
+const cors= require('cors')
 
 //Route s
 const LoginRoute= require('./routes/login')
@@ -8,6 +9,9 @@ const GetRiddleListRoute= require('./routes/getRiddleList')
 const GetRiddleRoute= require('./routes/login')
 const CheckRiddleRoute= require('./routes/checkRiddle')
 const HandleFreeze= require('./routes/handleBoard')
+const StartCampaign= require('./routes/startcampaign');
+const getCampaignStatus= require('./routes/getcampaignstatus');
+const AdminLogin= require('./routes/adminlogin');
 
 const {Sequelize, DataTypes} = require('sequelize')
 const sequelize = require('./sequelize');
@@ -26,13 +30,30 @@ db.sequelize = sequelize;
 
 db.teams= require('./modals/Teams')(sequelize, DataTypes);
 db.riddles= require('./modals/Riddles')(sequelize, DataTypes);
+db.admin= require('./modals/Admin')(sequelize, DataTypes);
+db.campaign= require('./modals/Campaign')(sequelize, DataTypes);
 
 app.use(express.json());
+
+let corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions));
 
 app.get('/', (req, res)=>{
     res.send('Hey there! This is uccda backend.');
 
     // db.teams.create({ teamid: "TEAM004", teamname: "samTeam", teamlead: "Sam", email: "sam1212@gmail.com", mobile: "8834343434", password: "sam883", teamscore: '0', riddlesnotvisited: "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38]" })
+    // .then((newUser) => {
+    //   console.log('New student created:', newUser.toJSON());
+    // })
+    // .catch((error) => {
+    //   console.error('Error creating student:', error);
+    // });
+
+    // db.admin.create({ email: "sharmacj123@gmail.com", password: "admin" })
     // .then((newUser) => {
     //   console.log('New student created:', newUser.toJSON());
     // })
@@ -291,6 +312,9 @@ app.use('/riddlelist', middleDB, GetRiddleListRoute);
 app.use('/riddle', middleDB, GetRiddleRoute);
 app.use('/checkriddle', middleDB, CheckRiddleRoute);
 app.use('/handlefreeze', middleDB, HandleFreeze);
+app.use('/startcampaign', middleDB, StartCampaign);
+app.use('/getcampaignstatus', middleDB, getCampaignStatus);
+app.use('/adminlogin', middleDB, AdminLogin);
 
 app.use((req, res) => {
     res.status(404).send('Not found!');
