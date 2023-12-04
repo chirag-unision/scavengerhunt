@@ -11,6 +11,8 @@ const CheckRiddleRoute= require('./routes/checkRiddle')
 const HandleFreeze= require('./routes/handleBoard')
 const StartCampaign= require('./routes/startcampaign');
 const getCampaignStatus= require('./routes/getcampaignstatus');
+const DeleteCampaign= require('./routes/deletecampaign');
+const GetTeams= require('./routes/getTeams');
 const AdminLogin= require('./routes/adminlogin');
 
 const {Sequelize, DataTypes} = require('sequelize')
@@ -314,8 +316,9 @@ app.use('/checkriddle', middleDB, CheckRiddleRoute);
 app.use('/handlefreeze', middleDB, HandleFreeze);
 app.use('/startcampaign', middleDB, StartCampaign);
 app.use('/getcampaignstatus', middleDB, getCampaignStatus);
+app.use('/deletecampaign', middleDB, DeleteCampaign);
+app.use('/getteams', middleDB, GetTeams);
 app.use('/adminlogin', middleDB, AdminLogin);
-
 app.use((req, res) => {
     res.status(404).send('Not found!');
 });

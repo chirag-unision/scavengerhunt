@@ -12,6 +12,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import axios from 'axios'
+import { useRouter } from 'next/navigation';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,11 +21,7 @@ function createData(name, calories, fat, carbs, protein) {
 }
 
 const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
+  createData('Campaign 1', 159, 6.0, 24, 4.0)
 ];
 
 export default function Home() {
@@ -33,6 +30,8 @@ export default function Home() {
   const [slots, setSlots]= useState("");
   const [status, setStatus]= useState(false);
   const [resetpass, setResetPass] = useState("");
+
+  const router= useRouter();
 
  
 
@@ -79,18 +78,16 @@ export default function Home() {
   }
 
   const resetCampaign = () =>{
-    if(resetpass){
-        
-      console.log('clicked',slots);
-      
-      axios.post('https://739b-2401-4900-1c67-5391-8d5d-3318-3d9a-b691.ngrok-free.app/resetcampaign', {
+    if(resetpass) {
+      axios.post('https://739b-2401-4900-1c67-5391-8d5d-3318-3d9a-b691.ngrok-free.app/deletecampaign', {
         id: 1,
         password : resetpass
       })
       .then(function (response) {
         console.log(response);
-        if(response?.data?.status == 200){
+        if(response?.data?.status == 100){
           setStatus(false);
+          setCurrSlots([]);
         }
       })
       .catch(function (error) {
@@ -106,8 +103,19 @@ export default function Home() {
     })
       .then(function (response) {
         console.log(response.data);
-        if(response.data.status==100)
-        setStatus(true)
+        if(response.data.status==100) {
+          axios.post('https://739b-2401-4900-1c67-5391-8d5d-3318-3d9a-b691.ngrok-free.app/getteams')
+          .then(function (response) {
+            console.log(response);
+            setCurrSlots(response.data.data)
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .finally(function () {
+          });
+          setStatus(true)
+        }
       })
       .catch(function (error) {
         console.log(error);
@@ -120,20 +128,6 @@ export default function Home() {
 
   useEffect(()=> {
     getStatus();
-
-    axios.get('http://uccdacellymca.site/getAllSlots')
-    .then(function (response) {
-      // handle success
-      console.log(response);
-      setCurrSlots(response.data.data)
-    })
-    .catch(function (error) {
-      // handle error
-      console.log(error);
-    })
-    .finally(function () {
-      // always executed
-    });
   }, [])
 
   return (
@@ -143,7 +137,7 @@ export default function Home() {
       <div className="fixed top-0 -left-20 flex flex-col place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]"></div>
       <div className="fixed -top-10 right-0 flex flex-col place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]"></div>
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p onClick={()=>{sessionStorage.removeItem('admin_id')}} className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
+        <p onClick={()=>{sessionStorage.removeItem('admin_id'); router.replace('/');}} className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
           Logout
         </p>
         <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
@@ -162,7 +156,7 @@ export default function Home() {
               height={50}
               priority
             />
-            Manan - A Techno Surge
+            Maystery Maze
           </a>
         </div>
       </div>
@@ -219,13 +213,13 @@ export default function Home() {
           <div key={i} className='w-full flex justify-between items-center m-1 border-2 p-4 border-sky-700 rounded-md bg-sky-700 bg-opacity-10'>
               <div className="px-5 py-4">
                 <h2 className={`mb-3 text-2xl font-semibold`}>
-                  Slot No.{i+1}
+                  Team No.{i+1}
                   <span className="inline-block">
                     -&gt;
                   </span>
                 </h2>
                 <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-                  {item.startTime} -- {item.endTime}
+                  {item.teamname} -- {item.teamlead}
                 </p>
               </div>
               <span className="inline-block text-5xl mr-2">
@@ -256,11 +250,11 @@ export default function Home() {
           <Table sx={{ minWidth: 650, backgroundColor: '#dfdfdf' }} size="small" aria-label="a dense table">
             <TableHead>
               <TableRow>
-                <TableCell>Dessert (100g serving)</TableCell>
-                <TableCell align="right">Calories</TableCell>
-                <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                <TableCell>Campaign Name (Running)</TableCell>
+                <TableCell align="right">seeds</TableCell>
+                <TableCell align="right">D</TableCell>
+                <TableCell align="right">C</TableCell>
+                <TableCell align="right">P</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

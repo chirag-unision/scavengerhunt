@@ -85,7 +85,7 @@ export default function Home() {
               height={50}
               priority
             />
-            Manan - A Techno Surge
+            Mystery Maze
           </a>
         </div>
       </div>
