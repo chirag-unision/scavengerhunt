@@ -102,6 +102,7 @@ export default function Scvn_main({ route, navigation }) {
 
             <View style={styles.buttons}>
                 <Button
+                    style={{width: '80%', marginHorizontal: '10%', height: 50, justifyContent: 'center'}}
                     title="Get Riddle"
                     loading={loading}
                     loadingIndicatorPosition="overlay"
@@ -109,11 +110,14 @@ export default function Scvn_main({ route, navigation }) {
                     disabled={teamscore == '100' ? true : false}
                 />
                 <Button
-            title="Logout"
-            loading={loading}
-            loadingIndicatorPosition="overlay"
-            onPress={()=>{AsyncStorage.clear(); navigation.navigate('loginstack')}}
-            />
+                    style={{height: 50, justifyContent: 'center'}}
+                    color={'red'}
+                    titleStyle={{color: 'white'}}
+                    title="Logout"
+                    loading={loading}
+                    loadingIndicatorPosition="overlay"
+                    onPress={()=>{AsyncStorage.clear(); navigation.navigate('loginstack')}}
+                />
             </View>
 
             <Image
@@ -257,9 +261,13 @@ const styles = StyleSheet.create({
         zIndex: 20
     },
     buttons: {
-        width: '80%',
-        marginHorizontal: '10%',
-        paddingVertical: 10
+        width: '100%',
+        marginHorizontal: '0%',
+        paddingVertical: 10,
+        justifyContent: 'space-between',
+        height: 250,
+        position: 'absolute',
+        bottom: -10
     },
     alertCard: {
         padding: 20,
